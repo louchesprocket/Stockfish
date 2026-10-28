@@ -54,7 +54,7 @@ int MaxThreads = std::max(1024, 4 * int(get_hardware_concurrency()));
 // This size was found to be a good balance between the Elo gain of increased
 // history sharing and the speed loss from more cross-cache accesses (see
 // PR#6526). The user can always explicitly override this behavior.
-constexpr NumaAutoPolicy DefaultNumaPolicy = BundledL3Policy{32};
+constexpr NumaAutoPolicy DefaultNumaPolicy = SystemNumaPolicy{};
 
 Engine::Engine(std::optional<std::filesystem::path> path) :
     binaryDirectory(path ? CommandLine::get_binary_directory(*path) : std::filesystem::path{}),

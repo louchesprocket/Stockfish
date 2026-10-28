@@ -632,6 +632,19 @@ class NumaConfig {
 
             cfg = std::move(splitCfg);
         }
+
+        // Guard: no NUMA node information was obtained (e.g. Wine, where
+        // GetNumaProcessorNodeEx is a stub and reports no nodes). Fall back
+        // to a plain single-node configuration with all allowed CPUs,
+        // mirroring the Linux fallback.
+        if (cfg.nodeByCpu.empty())
+        {
+            NumaConfig fallback = empty();
+            for (CpuIndex c = 0; c < SYSTEM_THREADS_NB; ++c)
+                if (is_cpu_allowed(c))
+                    fallback.add_cpu_to_node(NumaIndex{0}, c);
+            cfg = std::move(fallback);
+        }
     #endif
 
 #endif
